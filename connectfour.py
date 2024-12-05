@@ -7,13 +7,13 @@ class Connect4:
         self.COLS = 7  #number of colums o the board 
         self.current_player = random.choice(["Red", "Yellow"]) # randomizes player
         # Creating a 2D 6x7 grid to represent the game board 
-            Self.board = [[ for _ in range(self.COLS)] for _ in range self.ROWS)]
+            self.board = [[ for _ in range(self.COLS)] for _ in range self.ROWS)]
             
             # Creating a frame to hold the buttons for dropping the discs
             self.frame = tk.Frame(self.root)
             self.frame.pack()
                 # Creating a button at the top of each column 
-                Self.buttons = [tk.Button(self.frame, text=f”Drop {i+1}, command = lambda col=i: self.drop_disc(col)) for i in range(self.COLS)]
+                self.buttons = [tk.Button(self.frame, text=f”Drop {i+1}, command = lambda col=i: self.drop_disc(col)) for i in range(self.COLS)]
                 for button in self.buttons:
                         button.pack(side=tk.LEFT) # placing the buttons side by side
                 # creating a canvas to draw the game board
@@ -32,7 +32,7 @@ class Connect4:
                             color = self.board[row][col] if self.board[row][col] else “white”
                             #make a circle representing the slots
                             self.canvas.create_oval(x1, y1, x2, y2, fill=color, outline=”black”)
-            Def drop_disc(self, col):
+            Ddef drop_disc(self, col):
                     # check if theres been a move made for the bottom to the top 
                         for row in range(self.ROWS -1, -1, -1):
                                 if not self.board[row][col]: #see if the slot is empty
