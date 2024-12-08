@@ -48,6 +48,11 @@ class GamePlay: # put game functions: dropping pieces, etc.
 
 class CheckWin: # checking for win, try/except features, etc.
 
+class GameProgress: # save current player turn, where they went on the board, etc.
+    def __init__(self):
+        self.currentplayer = currentplayer
+        self.takenspaces = takenspaces
+    
 class GameInstructions:
     def __init__(self):
         self.instructions = instructions
@@ -56,7 +61,7 @@ class GameInstructions:
         instructions = ("Take turns dropping one of your pieces onto the board.", 
         "The first player to get four pieces in a row, vertically, horizontally, or diagnoally, wins!")
     
-    def display_instructions(self):
+    def display_instructions():
         messagebox.showinfo("Connect 4 Instructions", instructions)
 
 class DataSave:
@@ -64,7 +69,7 @@ class DataSave:
         self.game_save = game_save
         self.con = sqlite3.connect('game_progress.db')
         self.cur = con.cursor()
-    # to be continued once rest is done
+    # to be continued once rest is done; need save variables before
 #    cur.execute('''CREATE TABLE IF NOT EXISTS gameprogress
 #                (Player 1 Score, Player 2 Score, Position)''')
 
