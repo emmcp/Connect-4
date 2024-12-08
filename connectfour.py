@@ -71,19 +71,10 @@ if __name__ == "__main__":
     # Run the Tkinter event loop
     root.mainloop()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    
+# Emma's Code
+class GameSave:
+    def __init__(self):
+        self.game_save = game_save
+        self.con = sqlite3.connect('game_progress.db')
+        self.cur = con.cursor()
+# will finish once all variables are made; need to save by creating player move and player move count to store here
