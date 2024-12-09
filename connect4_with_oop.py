@@ -7,7 +7,7 @@ global root # allows root to be accessed through all classes
 root = Tk()
 root.title("Connect4")
 
-class Players: # something here is buggy so not calling
+class Players: #need to add later in code functions that will add their turns taken when they go and removes pieces
     def __init__(self):
         self.player1 = {"Name": "Player 1", "Turns Taken": 0, "Pieces": 21} # can use dictionaries to count turns and number of pieces gone
         self.player2 = {"Name": "Player 2", "Turns Taken": 0, "Pieces": 21}
@@ -28,6 +28,9 @@ class Players: # something here is buggy so not calling
             print("That is not a valid color option. Pick yellow or red.")
 
 class Board: # setting up the board, tracking game
+# Need to add: Way to check a win 
+# Color corresponding to pieces and player
+
     def __init__(self):
         self.rows = 6
         self.columns = 7
@@ -51,6 +54,9 @@ class Board: # setting up the board, tracking game
                 piece = "Yellow"
         
 class GUI: # interface elements
+# Needs a circle grid (creating the board)
+# Color correspondence for turns (can probably use modulus truth, if the turn is even, then whatever color goes first)
+
     def __init__(self):
         self.root = root
         self.board_initializer()
@@ -97,6 +103,10 @@ class GameInstructions: # pop-up window
         messagebox.showinfo("Connect 4 Instructions", instructions)
 
 # class GameSave:
+# Needs connection of removing pieces
+# Needs to restart after game is reset
+# Needs to start with data if re-opened
+
 #     def __init__(self):
 #         self.con = sqlite3.connect('game_progress.db')
 #         self.cur = self.con.cursor()
