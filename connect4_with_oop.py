@@ -6,9 +6,23 @@ root.title("Connect4")
 
 class Players:
     def __init__(self):
-        self.player1 = player1
-        self.player2 = player2
-        self.players = [player1, player2]
+        self.player1 = {"Name": "Player 1", "Turns Taken": 0, "Pieces": 21} # can use dictionaries to count turns and number of pieces gone
+        self.player2 = {"Name": "Player 2", "Turns Taken": 0, "Pieces": 21}
+        self.colors = ["Red", "Yellow"]
+        self.color_assignment()
+    
+    def color_assignment(self):
+        self.player_1_choice = input("Player 1, pick red or yellow: ")
+        self.player_1_choice.lower()
+        self.player_1_choice.strip()
+        if self.player_1_choice == "red":
+            self.player1.update({"Color": "Red"})
+            self.player2.update({"Color": "Yellow"})
+        elif self.player_1_choice == "yellow":
+            self.player1.update({"Color": "Yellow"})
+            self.player2.update({"Color": "Red"})
+        else:
+            print("That is not a valid color option. Pick yellow or red.")
 
 class Board: # setting up the board, tracking game
     def __init__(self):
@@ -26,11 +40,12 @@ class Board: # setting up the board, tracking game
             print("This column is full. Go elsewhere.")
     
     def turn(self):
-        self.turns_made = 0
-        if self.turn == "Yellow": # if it is player one's turn
-            self.current_piece = "Yellow"
-        else:
-            self.current_piece = "Red"
+        self.piece = piece
+        while True:
+            if self.player1["Color"] == "Red":
+                piece = "Red"
+            elif self.player1["Color"] == "Yellow":
+                piece = "Yellow"
         
 
 class GUI: # interface elements
