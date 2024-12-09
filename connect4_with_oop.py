@@ -43,10 +43,10 @@ class Board: # setting up the board, tracking game
             
     def players_swap(self):
         if self.current_player == self.player_1:
-            self.current_player = self.player_2
+            self.current_player = self.player_1
 
         else:
-            self.current_player = self.player_1
+            self.current_player = self.player_2
             
     # def turn(self):
     #     self.piece = piece
