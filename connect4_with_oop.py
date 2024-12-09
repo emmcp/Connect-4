@@ -1,58 +1,72 @@
 from tkinter import *
-from tkinter import messagebox
-import random
-import sqlite3
 
-class Board: # setting up the board
-    root = Tk()
+global root # allows root to be accessed through all classes
+root = Tk()
+root.title("Connect4")
 
+class Players:
+    def __init__(self):
+        self.player1 = player1
+        self.player2 = player2
+        self.players = [player1, player2]
+
+class Board: # setting up the board, tracking game
     def __init__(self):
         self.rows = 6
         self.columns = 7
+        self.pieces = [0, 0, 0, 0, 0, 0, 0]
+        self.piece_options = {"Player 1": 21, "Player 2": 21}
 
-    def boardgrid(self, rows, column): # set up board grid
-        for row in range(self.rows):
-            for column in range(self.columns):
-                x1 = column * 100 + 10
-                y1 = row * 100 + 10
-                x2 = x1 + 80
-                y2 = y1 + 80
+    def add_to_column(self, c):
+        if self.pieces[c] < 6:
+            self.pieces[c] += 1
 
-    def board_set_up(self, root): # board interactivity
-        self.board = [[ '' for _ in range(self.COLS)] for _ in range(self.ROWS)]
-
-        # Creating a frame to hold the buttons for dropping the discs
-        self.frame = Frame(self.root)
-        self.frame.pack()
-
-        self.buttons = [Button(self.frame, text=f"Drop {i+1}", command = lambda col=i: self.drop_disc(col)) for i in range(self.COLS)]
-        for button in self.buttons:
-            button.pack(side="left", padx=10) # placing the buttons side by side
-            # creating a canvas to draw the game board
-
-    def draw_board(self, root): # set up tkinter functions of board
-        canvas = tk.Canvas(self.root, width = 700, height=600, bg = "blue")
-        #self.Canvas.pack = Canvas(self.root, width = 700, height=600, bg = "blue")
-        self.Canvas.pack()
-        # create the empty game board
-        self.draw_board()
-
-class Players: # player initialization, player switching, etc.
-    def __init__(self):
-        self.colors = ("Red", "Yellow")
-        self.player1 = player1
-        self.player2 = player2
-        self.players = (player1, player2)
-
-class GamePlay: # put game functions: dropping pieces, etc.
-
-class CheckWin: # checking for win, try/except features, etc.
-
-class GameProgress: # save current player turn, where they went on the board, etc.
-    def __init__(self):
-        self.currentplayer = currentplayer
-        self.takenspaces = takenspaces
+    def check_win(self, c):
+        if self.pieces(c) == 6: # need to add parameter where only displays if the corresponding button is pressed
+            print("This column is full. Go elsewhere.")
     
+    def turn(self):
+        self.turns_made = 0
+        if self.turn == "Yellow": # if it is player one's turn
+            self.current_piece = "Yellow"
+        else:
+            self.current_piece = "Red"
+        
+
+class GUI: # interface elements
+    def __init__(self):
+        self.root = root
+        self.board_initializer()
+        self.button_initalizing() # call functions here so easier to call at end
+        self.board = Board() # initialize previous class
+
+    def clicked(self, c): # increment pieces in column, visually add piece
+        self.board.add_to_column(c)
+        print(self.board.pieces)
+
+    def button_initalizing(self): # making the buttons
+        # lambda allows one to be added to each corresponding column of self.pieces
+        self.buttonA = Button(self.root, text="Column A", command = lambda: self.clicked(0), bg = "Navy")
+        self.buttonA.grid(row=2, column=1)
+        self.buttonB = Button(self.root, text="Column B", command = lambda: self.clicked(1), bg = "Navy")
+        self.buttonB.grid(row=2, column=2)
+        self.buttonC = Button(root, text="Column C", command = lambda: self.clicked(2), bg = "Navy")
+        self.buttonC.grid(row=2, column=3)
+        self.buttonD = Button(root, text="Column D", command = lambda: self.clicked(3), bg = "Navy")
+        self.buttonD.grid(row=2, column=4)
+        self.buttonE = Button(root, text="Column E", command = lambda: self.clicked(4), bg = "Navy")
+        self.buttonE.grid(row=2, column=5)
+        self.buttonF = Button(root, text="Column F", command = lambda: self.clicked(5), bg = "Navy")
+        self.buttonF.grid(row=2, column=6)
+        self.buttonG = Button(root, text="Column G", command = lambda: self.clicked(6), bg = "Navy")
+        self.buttonG.grid(row=2, column=7)
+
+        self.buttons = [self.buttonA, self.buttonB, self.buttonB, self.buttonC, 
+        self.buttonD, self.buttonE, self.buttonF, self.buttonG]
+    
+    def board_initializer(self): # needs rest of parts
+        self.root.configure(bg='navy')
+
 class GameInstructions:
     def __init__(self):
         self.instructions = instructions
@@ -64,14 +78,16 @@ class GameInstructions:
     def display_instructions():
         messagebox.showinfo("Connect 4 Instructions", instructions)
 
-class DataSave:
-    def __init__(self, database_routing):
-        self.game_save = game_save
-        self.con = sqlite3.connect('game_progress.db')
-        self.cur = con.cursor()
-    # to be continued once rest is done; need save variables before
-#    cur.execute('''CREATE TABLE IF NOT EXISTS gameprogress
-#                (Player 1 Score, Player 2 Score, Position)''')
+# class DataSave:
+#     def __init__(self, database_routing):
+#         self.game_save = game_save
+#         self.con = sqlite3.connect('game_progress.db')
+#         self.cur = con.cursor()
+#     # to be continued once rest is done; need save variables before
+# #    cur.execute('''CREATE TABLE IF NOT EXISTS gameprogress
+# #                (Player 1 Score, Player 2 Score, Position)''')
 
-root = Tk()
+# calling functions
+b = Board()
+g = GUI()
 root.mainloop()
