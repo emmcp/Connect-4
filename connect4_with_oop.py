@@ -7,6 +7,7 @@ global root # allows root to be accessed through all classes
 root = Tk()
 root.title("Connect4")
 
+# Emma
 class Players: #need to add later in code functions that will add their turns taken when they go and removes pieces
     def __init__(self):
         self.player1 = {"Name": "Player 1", "Turns Taken": 0, "Pieces": 21} # can use dictionaries to count turns and number of pieces gone
@@ -44,18 +45,19 @@ class Board: # setting up the board, tracking game
     def check_win(self, c): # needs to clear board, check win, check if all pieces gone
         if self.pieces(c) == 6: # need to add parameter where only displays if the corresponding button is pressed
             print("This column is full. Go elsewhere.")
-    
-    def turn(self):
-        self.piece = piece
-        while True:
-            if self.player1["Color"] == "Red":
-                piece = "Red"
-            elif self.player1["Color"] == "Yellow":
-                piece = "Yellow"
+        
+    # def turn(self):
+    #     self.piece = piece
+    #     while True:
+    #         if self.player1["Color"] == "Red":
+    #             piece = "Red"
+    #         elif self.player1["Color"] == "Yellow":
+    #             piece = "Yellow"
 
     def players_swap(self): 
         # Charlotte: allows for switching turns between plays 
-        
+
+# AK
 class GUI: # interface elements
 # Needs a circle grid (creating the board)
 # Color correspondence for turns (can probably use modulus truth, if the turn is even, then whatever color goes first)
@@ -93,6 +95,7 @@ class GUI: # interface elements
     def board_initializer(self): # needs rest of parts
         self.root.configure(bg='navy')
 
+# Charlotte
 class GameInstructions: # pop-up window
     def __init__(self):
         self.instructions = ("Take turns dropping one of your pieces onto the board.", 
@@ -105,6 +108,7 @@ class GameInstructions: # pop-up window
     def display_instructions():
         messagebox.showinfo("Connect 4 Instructions", instructions)
 
+# Emma
 # class GameSave:
 # Needs connection of removing pieces
 # Needs to restart after game is reset
