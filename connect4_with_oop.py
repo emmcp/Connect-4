@@ -16,12 +16,11 @@ class Players: #need to add later in code functions that will add their turns ta
         self.color_assignment()
     
     def color_assignment(self):
-        colors = ["Red", "Yellow"]
-        player1_color = random.choice(colors)
-        player1.update({"Color": player1_color})
-        colors.remove(player1_color)
-        player2_color = random.choice(colors)
-        player2.update({"Color": player2_color})
+        self.player1_color = random.choice(self.colors)
+        self.player1.update({"Color": self.player1_color})
+        self.colors.remove(self.player1_color)
+        self.player2_color = random.choice(self.colors)
+        self.player2.update({"Color": self.player2_color})
 
 class Board: # setting up the board, tracking game
 # Need to add: Way to check a win 
