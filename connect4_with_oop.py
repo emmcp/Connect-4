@@ -15,7 +15,7 @@ class Players: #need to add later in code functions that will add their turns ta
         self.colors = ["Red", "Yellow"]
         self.color_assignment()
     
-    def color_assignment(self): # should make random
+    def color_assignment(self):
         colors = ["Red", "Yellow"]
         player1_color = random.choice(colors)
         player1.update({"Color": player1_color})
