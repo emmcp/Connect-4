@@ -99,10 +99,6 @@ class GameInstructions: # pop-up window
     def __init__(self):
         self.instructions = ("Take turns dropping one of your pieces onto the board.", 
         "The first player to get four pieces in a row, vertically, horizontally, or diagnoally, wins!")
-
-    def game_instructions(self):
-        instructions = ("Take turns dropping one of your pieces onto the board.", 
-        "The first player to get four pieces in a row, vertically, horizontally, or diagnoally, wins!")
     
     def display_instructions():
         messagebox.showinfo("Connect 4 Instructions", instructions)
