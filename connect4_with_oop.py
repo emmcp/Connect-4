@@ -45,7 +45,14 @@ class Board: # setting up the board, tracking game
     def check_win(self, c): # needs to clear board, check win, check if all pieces gone
         if self.pieces(c) == 6: # need to add parameter where only displays if the corresponding button is pressed
             print("This column is full. Go elsewhere.")
-        
+            
+    def players_swap(self):
+        if self.current_player == self.player_1:
+            self.current_player = self.player_2
+
+        else:
+            self.current_player = self.player_1
+            
     # def turn(self):
     #     self.piece = piece
     #     while True:
@@ -54,9 +61,7 @@ class Board: # setting up the board, tracking game
     #         elif self.player1["Color"] == "Yellow":
     #             piece = "Yellow"
 
-    def players_swap(self): 
-        # Charlotte: allows for switching turns between plays 
-
+    
 # AK
 class GUI: # interface elements
 # Needs a circle grid (creating the board)
