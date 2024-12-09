@@ -9,7 +9,7 @@ class Connect4:
         # Creating a 2D 6x7 grid to represent the game board 
         self.board = [[ '' for _ in range(self.COLS)] for _ in range(self.ROWS)]
 
-        #game instructtions 
+        #game instructions 
         self.game_instructions
         # Creating a frame to hold the buttons for dropping the discs
         self.frame = tk.Frame(self.root)
