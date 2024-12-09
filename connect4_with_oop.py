@@ -16,17 +16,12 @@ class Players: #need to add later in code functions that will add their turns ta
         self.color_assignment()
     
     def color_assignment(self): # should make random
-        self.player_1_choice = input("Player 1, pick red or yellow: ")
-        self.player_1_choice.lower()
-        self.player_1_choice.strip()
-        if self.player_1_choice == "red":
-            self.player1.update({"Color": "Red"})
-            self.player2.update({"Color": "Yellow"})
-        elif self.player_1_choice == "yellow":
-            self.player1.update({"Color": "Yellow"})
-            self.player2.update({"Color": "Red"})
-        else:
-            print("That is not a valid color option. Pick yellow or red.")
+        colors = ["Red", "Yellow"]
+        player1_color = random.choice(colors)
+        player1.update({"Color": player1_color})
+        colors.remove(player1_color)
+        player2_color = random.choice(colors)
+        player2.update({"Color": player2_color})
 
 class Board: # setting up the board, tracking game
 # Need to add: Way to check a win 
