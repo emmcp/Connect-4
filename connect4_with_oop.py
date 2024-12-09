@@ -52,6 +52,9 @@ class Board: # setting up the board, tracking game
                 piece = "Red"
             elif self.player1["Color"] == "Yellow":
                 piece = "Yellow"
+
+    def players_swap(self): 
+        # Charlotte: allows for switching turns between plays 
         
 class GUI: # interface elements
 # Needs a circle grid (creating the board)
