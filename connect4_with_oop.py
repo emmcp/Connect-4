@@ -122,7 +122,7 @@ class GameInstructions: # pop-up window
 #         self.con.commit()
 
 # calling functions
-#p = Players()
+p = Players()
 b = Board()
 g = GUI()
 i = GameInstructions()
