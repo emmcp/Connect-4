@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 import random
 import sqlite3
 
@@ -13,7 +14,7 @@ class Players: # something here is buggy so not calling
         self.colors = ["Red", "Yellow"]
         self.color_assignment()
     
-    def color_assignment(self):
+    def color_assignment(self): # should make random
         self.player_1_choice = input("Player 1, pick red or yellow: ")
         self.player_1_choice.lower()
         self.player_1_choice.strip()
@@ -37,7 +38,7 @@ class Board: # setting up the board, tracking game
         if self.pieces[c] < 6:
             self.pieces[c] += 1
 
-    def check_win(self, c):
+    def check_win(self, c): # needs to clear board, check win, check if all pieces gone
         if self.pieces(c) == 6: # need to add parameter where only displays if the corresponding button is pressed
             print("This column is full. Go elsewhere.")
     
@@ -83,7 +84,7 @@ class GUI: # interface elements
     def board_initializer(self): # needs rest of parts
         self.root.configure(bg='navy')
 
-class GameInstructions:
+class GameInstructions: # pop-up window
     def __init__(self):
         self.instructions = ("Take turns dropping one of your pieces onto the board.", 
         "The first player to get four pieces in a row, vertically, horizontally, or diagnoally, wins!")
