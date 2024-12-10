@@ -139,8 +139,26 @@ class GameInstructions: # pop-up window
         self.display_instructions()
     
     def display_instructions(self):
-        messagebox.showinfo("Connect 4 Instructions", self.instructions)
+        messagebox.showinfo("Connect 4 Instructions", "\n".join(self.instructions))
 
+class GameOverPopupWindow:
+    def __init__(self, winner):
+        self.winner = winner
+        self.display_gameover()
+
+    def display_gameover(self):
+        player_input = messagebox.askyesno(
+            "Game Over!",
+            f" Player {self.winner} wins! Would you like to restart the game?"
+        )
+        if player_input:
+            print("Restarting the game...")
+        else:
+            print("Ending game...")
+            exit()
+            
+    def game_restart(self):
+        self.game.restart()
 # Emma
 # class GameSave:
 # Needs connection of removing pieces
