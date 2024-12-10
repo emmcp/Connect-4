@@ -8,7 +8,7 @@ root = Tk()
 root.title("Connect4")
 
 # Emma
-class Players: #need to add later in code functions that will add their turns taken when they go and removes pieces
+class Players:
     def __init__(self):
         self.player1 = {"Player Number": 1, "Turns Taken": 0, "Pieces": 21} # can use dictionaries to count turns and number of pieces gone
         self.player2 = {"Player Number": 2, "Turns Taken": 0, "Pieces": 21}
@@ -87,6 +87,8 @@ class Board: # game logic, game progress
             pass
 
     def players_swap(self):
+        self.current_player["Turns Taken"] +=1
+        self.current_player["Pieces"] -= 1
         if self.current_player == self.Players.player1:
             self.current_player = self.Players.player2
         else:
