@@ -35,6 +35,8 @@ class Board: # setting up the board, tracking game
     def add_to_column(self, c):
         if self.pieces[c] < 6:
             self.pieces[c] += 1
+        else:
+            messagebox.showinfo("Error: Column is full", "Pick another column.") 
 
     def check_win(self, c): # needs to clear board, check win, check if all pieces gone
         if self.pieces(c) == 6: # need to add parameter where only displays if the corresponding button is pressed
@@ -99,6 +101,7 @@ class GameInstructions: # pop-up window
     def __init__(self):
         self.instructions = ("Take turns dropping one of your pieces onto the board.", 
         "The first player to get four pieces in a row, vertically, horizontally, or diagnoally, wins!")
+        self.display_instructions()
     
     def display_instructions():
         messagebox.showinfo("Connect 4 Instructions", instructions)
