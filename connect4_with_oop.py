@@ -107,6 +107,7 @@ class GUI: # interface elements
 
     def clicked(self, c): # increment pieces in column, visually add piece
         self.board.play_piece(c)
+        self.update_board()
 
     def button_initalizing(self): # making the buttons
         # lambda allows one to be added to each corresponding column of self.pieces_in_rows
@@ -130,6 +131,20 @@ class GUI: # interface elements
     
     def board_initializer(self): # needs rest of parts
         self.root.configure(bg='navy')
+        self.board_canvas = Canvas(root, width=700, height=600, bg ='blue')
+        self.board_canvas.grid(row=3, column=1, columnspan=7)
+        self.circles = [[self.board_canvas.create_oval(j * 100, i * 100, (i +1) * 100, fill='white') for j in range(7)] for i in range(6)]
+
+    def update_board(self):
+        for row in range(6):
+            for col in range(7):
+                player_number = self.board.board_game[row][col]
+                color = 'white'
+                if player_number == 1:
+                    color = self.board.Players.player1['Color']
+                elif player_number == 2:
+                    color = self.board.Players.player2['Color']
+                self.board_canvas.itemconfig(self.circles[row][col], fill=color)
 
 # Charlotte pop-up window 
 class GameInstructions:
@@ -165,7 +180,7 @@ class GameOverPopupWindow:
 class Game: 
     def __init__(self):
         self.root = tk.TK()
-        self.root.withdrawal()
+        self.root.withdraw()
         self.start_game()
 
     def start_game(self):
