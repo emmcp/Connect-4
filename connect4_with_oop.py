@@ -131,8 +131,8 @@ class GUI: # interface elements
     def board_initializer(self): # needs rest of parts
         self.root.configure(bg='navy')
 
-# Charlotte
-class GameInstructions: # pop-up window
+# Charlotte pop-up window 
+class GameInstructions:
     def __init__(self):
         self.instructions = ("Take turns dropping one of your pieces onto the board.", 
         "The first player to get four pieces in a row, vertically, horizontally, or diagnoally, wins!")
@@ -142,23 +142,54 @@ class GameInstructions: # pop-up window
         messagebox.showinfo("Connect 4 Instructions", "\n".join(self.instructions))
 
 class GameOverPopupWindow:
-    def __init__(self, winner):
+    def __init__(self, winner, game):
         self.winner = winner
+        self.game = game
         self.display_gameover()
 
-    def display_gameover(self):
+    def gameover_popup(self):
         player_input = messagebox.askyesno(
             "Game Over!",
             f" Player {self.winner} wins! Would you like to restart the game?"
         )
         if player_input:
             print("Restarting the game...")
+            self.game.restart()
         else:
-            print("Ending game...")
-            exit()
+            print("Exiting the game...")
+            self.game.exit_game()
             
     def game_restart(self):
         self.game.restart()
+
+class Game: 
+    def __init__(self):
+        self.root = tk.TK()
+        self.root.withdrawal()
+        self.start_game()
+
+    def start_game(self):
+        GameInstructions() 
+        self.play_game()
+
+    def play_game(self):
+        winner = 1
+        self.end_game(winner)
+
+    def end_game(self, winner):
+        GameOverPopupWindow(winner, self) 
+
+    # restarts the game 
+    def restart(self):
+        print("Game Restarted!")
+        self.root.destroy()
+        self.__init__()
+
+    # officially exits game 
+    def exit_game(self):
+        print("Exiting the game...")
+        self.root.destroy()
+
 # Emma
 # class GameSave:
 # Needs connection of removing pieces
@@ -183,3 +214,6 @@ g = GUI()
 i = GameInstructions()
 #data = GameSave()
 root.mainloop()
+
+# starts the game
+game = Game()
