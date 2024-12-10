@@ -10,8 +10,8 @@ root.title("Connect4")
 # Emma
 class Players: #need to add later in code functions that will add their turns taken when they go and removes pieces
     def __init__(self):
-        self.player1 = {"Name": "Player 1", "Turns Taken": 0, "Pieces": 21} # can use dictionaries to count turns and number of pieces gone
-        self.player2 = {"Name": "Player 2", "Turns Taken": 0, "Pieces": 21}
+        self.player1 = {"Player Number": 1, "Turns Taken": 0, "Pieces": 21} # can use dictionaries to count turns and number of pieces gone
+        self.player2 = {"Player Number": 2, "Turns Taken": 0, "Pieces": 21}
         self.colors = ["Red", "Yellow"]
         self.color_assignment()
     
@@ -29,25 +29,27 @@ class Board: # setting up the board, tracking game
     def __init__(self):
         self.rows = 6
         self.columns = 7
-        self.pieces = [0, 0, 0, 0, 0, 0, 0]
-        self.piece_options = {"Player 1": 21, "Player 2": 21}
+        self.pieces_in_rows = [0, 0, 0, 0, 0, 0, 0]
+        self.board_game = [[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0]] # 6 rows with seven columns
+        self.Players = Players()
+        self.current_player = self.Players.player1 # starts off with a player 1
 
     def add_to_column(self, c):
-        if self.pieces[c] < 6:
-            self.pieces[c] += 1
+        if self.pieces_in_rows[c] < 6:
+            self.board_game[self.pieces_in_rows[c]][c] = self.current_player["Player Number"]
+            self.pieces_in_rows[c] += 1 # adds one to piece
+            print(self.board_game)
         else:
-            messagebox.showinfo("Error: Column is full", "Pick another column.") 
+            messagebox.showinfo("Error: Column is full", "Pick another column.")
 
-    def check_win(self, c): # needs to clear board, check win, check if all pieces gone
-        if self.pieces(c) == 6: # need to add parameter where only displays if the corresponding button is pressed
-            print("This column is full. Go elsewhere.")
-            
+    #def check_win(self, c): # needs to clear board, check win, check if all pieces gone
+
     def players_swap(self):
         if self.current_player == self.player_1:
-            self.current_player = self.player_1
+            self.current_player = self.player_2
 
         else:
-            self.current_player = self.player_2
+            self.current_player = self.player_1
             
     # def turn(self):
     #     self.piece = piece
@@ -71,10 +73,10 @@ class GUI: # interface elements
 
     def clicked(self, c): # increment pieces in column, visually add piece
         self.board.add_to_column(c)
-        print(self.board.pieces)
+        print(self.board.pieces_in_rows)
 
     def button_initalizing(self): # making the buttons
-        # lambda allows one to be added to each corresponding column of self.pieces
+        # lambda allows one to be added to each corresponding column of self.pieces_in_rows
         self.buttonA = Button(root, text="Column A", command = lambda: self.clicked(0), bg = "Navy")
         self.buttonA.grid(row=2, column=1)
         self.buttonB = Button(root, text="Column B", command = lambda: self.clicked(1), bg = "Navy")
@@ -103,8 +105,8 @@ class GameInstructions: # pop-up window
         "The first player to get four pieces in a row, vertically, horizontally, or diagnoally, wins!")
         self.display_instructions()
     
-    def display_instructions():
-        messagebox.showinfo("Connect 4 Instructions", instructions)
+    def display_instructions(self):
+        messagebox.showinfo("Connect 4 Instructions", self.instructions)
 
 # Emma
 # class GameSave:
@@ -125,7 +127,6 @@ class GameInstructions: # pop-up window
 #         self.con.commit()
 
 # calling functions
-p = Players()
 b = Board()
 g = GUI()
 i = GameInstructions()
