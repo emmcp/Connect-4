@@ -22,9 +22,7 @@ class Players: #need to add later in code functions that will add their turns ta
         self.player2_color = random.choice(self.colors)
         self.player2.update({"Color": self.player2_color})
 
-class Board: # setting up the board, tracking game
-# Need to add: Way to check a win 
-# Color corresponding to pieces and player
+class Board: # game logic, game progress
 
     def __init__(self):
         self.rows = 6
@@ -33,32 +31,66 @@ class Board: # setting up the board, tracking game
         self.board_game = [[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0]] # 6 rows with seven columns
         self.Players = Players()
         self.current_player = self.Players.player1 # starts off with a player 1
+        self.last_played = None
 
-    def add_to_column(self, c):
+    def play_piece(self, c):
         if self.pieces_in_rows[c] < 6:
             self.board_game[self.pieces_in_rows[c]][c] = self.current_player["Player Number"]
+            self.last_played = (self.pieces_in_rows[c], c) # allows to look for surrounding area to see if there's a win
             self.pieces_in_rows[c] += 1 # adds one to piece
-            print(self.board_game)
+            print(self.last_played)
+            self.check_win()
+            if self.check_win():
+                messagebox.showinfo("We have a winner!", f"Player {self.current_player['Player Number']} has won!")
+            self.players_swap()
         else:
             messagebox.showinfo("Error: Column is full", "Pick another column.")
 
-    #def check_win(self, c): # needs to clear board, check win, check if all pieces gone
+    def check_win(self):
+        try: # rows
+            row, column = self.last_played # takes first element to equal row, second to equal column
+            for c in range(-3, 1):
+                play = [self.board_game[row][column + c + t] for t in range(0, 4)]
+                if all(play[t] == play[0] for t in range(0,4)): # returns True if all are player 1 or player 2
+                    return True
+        except:
+            pass
+
+        try: # columns
+            row, column = self.last_played # takes first element to equal row, second to equal column
+
+            for c in range(-3, 1):
+                play = [self.board_game[row + c + t][column] for t in range(0, 4)]
+                if all(play[t] == play[0] for t in range(0,4)): # returns True if all are player 1 or player 2
+                    return True
+        except:
+            pass
+        
+        try: #diagonals bottom left to top right
+            row, column = self.last_played # takes first element to equal row, second to equal column
+
+            for c in range(-3, 1): # checks horizontal
+                play = [self.board_game[row + c + t][column + c + t] for t in range(0, 4)]
+                if all(play[t] == play[0] for t in range(0,4)): # returns True if all are player 1 or player 2
+                    return True
+        except:
+            pass
+
+        try: #diagonals bottom right to top left
+            row, column = self.last_played # takes first element to equal row, second to equal column
+
+            for c in range(-3, 1): # checks horizontal
+                play = [self.board_game[row - c + t][column + c + t] for t in range(0, 4)]
+                if all(play[t] == play[0] for t in range(0,4)): # returns True if all are player 1 or player 2
+                    return True
+        except:
+            pass
 
     def players_swap(self):
-        if self.current_player == self.player_1:
-            self.current_player = self.player_2
-
+        if self.current_player == self.Players.player1:
+            self.current_player = self.Players.player2
         else:
-            self.current_player = self.player_1
-            
-    # def turn(self):
-    #     self.piece = piece
-    #     while True:
-    #         if self.player1["Color"] == "Red":
-    #             piece = "Red"
-    #         elif self.player1["Color"] == "Yellow":
-    #             piece = "Yellow"
-
+            self.current_player = self.Players.player1
     
 # AK
 class GUI: # interface elements
@@ -72,8 +104,7 @@ class GUI: # interface elements
         self.board = Board() # initialize previous class
 
     def clicked(self, c): # increment pieces in column, visually add piece
-        self.board.add_to_column(c)
-        print(self.board.pieces_in_rows)
+        self.board.play_piece(c)
 
     def button_initalizing(self): # making the buttons
         # lambda allows one to be added to each corresponding column of self.pieces_in_rows
