@@ -179,7 +179,7 @@ class GameOverPopupWindow:
 
 class Game: 
     def __init__(self):
-        self.root = tk.TK()
+        self.root = TK()
         self.root.withdraw()
         self.start_game()
 
