@@ -160,7 +160,7 @@ class GameOverPopupWindow:
         )
         if player_input:
             print("Restarting the game...")
-            self.game.restart()
+            self.game_restart()
         else:
             print("Exiting the game...")
             self.game.exit_game()
