@@ -150,7 +150,7 @@ class GameOverPopupWindow:
     def __init__(self, winner, game):
         self.winner = winner
         self.game = game
-        self.display_popup()
+        self.gameover_popup()
 
     def gameover_popup(self):
         player_input = messagebox.askyesno(
