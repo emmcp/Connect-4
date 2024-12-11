@@ -195,12 +195,16 @@ class Game:
         self.setup_new_game()
         self.play_game()
         
-
     # officially exits game 
     def exit_game(self):
         print("Exiting the game...")
         self.root.destroy()
 
+    def clear_board(self):
+        self.gui.reset_canvas()
+
+    def new_game_setup(self):
+        print("Setting up new game...")
 
 # Emma
 # class GameSave:
