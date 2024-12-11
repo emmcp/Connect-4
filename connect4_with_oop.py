@@ -165,7 +165,9 @@ class GameOverPopupWindow:
             self.game.exit_game()
             
     def game_restart(self):
-        self.game.restart()
+        self.game.clear_board()
+        self.game.setup_new_game()
+        print("The game has been reset.") 
 
 class Game:
     def __init__(self):
