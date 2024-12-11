@@ -32,7 +32,6 @@ class Board: # game logic, game progress
         self.Players = Players()
         self.current_player = self.Players.player1 # starts off with a player 1
         self.last_played = None  # placeholder until it's defined below
-        self.GameOverPopupWindow = GameOverPopupWindow(None)
 
     def play_piece(self, c):
         if self.pieces_in_rows[c] < 6:
