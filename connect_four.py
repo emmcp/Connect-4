@@ -185,7 +185,6 @@ class Game:
         self.start_game()
 
     def start_game(self):
-        GameInstructions() 
         self.play_game()
 
     def play_game(self):
