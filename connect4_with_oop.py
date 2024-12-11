@@ -144,7 +144,8 @@ class GUI: # interface elements
                     color = self.board.Players.player1['Color']
                 elif player_number == 2:
                     color = self.board.Players.player2['Color']
-                self.board_canvas.itemconfig(self.circles[row][col], fill=color)
+                bottom_row = 5 - row
+                self.board_canvas.itemconfig(self.circles[bottow_row][col], fill=color)
 
 # Charlotte pop-up window 
 class GameInstructions:
