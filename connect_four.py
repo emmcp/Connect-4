@@ -174,36 +174,10 @@ class GameOverPopupWindow:
         else:
             print("Exiting the game...")
             self.game.exit_game()
-            
-    def game_restart(self):
-        self.game.restart()
 
-class Game: 
-    def __init__(self):
-        self.root = root
-        self.root.withdraw()
-        self.start_game()
+# We need a function to restart the game by clearing the grid
+# We need a function to officially end the game 
 
-    def start_game(self):
-        self.play_game()
-
-    def play_game(self):
-        winner = 1
-        self.end_game(winner)
-
-    def end_game(self, winner):
-        GameOverPopupWindow(winner, self) 
-
-    # restarts the game 
-    def restart(self):
-        print("Game Restarted!")
-        self.root.destroy()
-        self.__init__()
-
-    # officially exits game 
-    def exit_game(self):
-        print("Exiting the game...")
-        self.root.destroy()
 
 # Emma
 # class GameSave:
