@@ -140,7 +140,8 @@ class GUI: # interface elements
 class GameInstructions:
     def __init__(self):
         self.instructions = ("Take turns dropping one of your pieces onto the board.", 
-        "The first player to get four pieces in a row, vertically, horizontally, or diagnoally, wins!")
+        "The first player to get four pieces in a row, vertically, horizontally, or diagnoally, wins!"
+        )
         self.display_instructions()
     
     def display_instructions(self):
@@ -185,12 +186,11 @@ class Game:
         self.end_game(self.winner)
 
     def end_game(self, winner):
-        self.winner = winner
-        self.popup_window = GameOverPopupWindow(self.winner, self)
+        self.popup_window = GameOverPopupWindow(winner, self)
 
     # restarts the game 
     def restart(self):
-        print("Restarting the game...")        
+        print("Restart initiated -- resetting the game...")        
         self.clear_board()
         self.setup_new_game()
         self.play_game()
@@ -201,10 +201,12 @@ class Game:
         self.root.destroy()
 
     def clear_board(self):
+        print("Board cleared.")
         self.gui.reset_canvas()
 
     def new_game_setup(self):
         print("Setting up new game...")
+        self.winner = None
 
 # Emma
 # class GameSave:
