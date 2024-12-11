@@ -224,7 +224,6 @@ class Game:
 #         self.con.commit()
 
 # calling functions
-b = Board()
 g = GUI()
 i = GameInstructions()
 #data = GameSave()
