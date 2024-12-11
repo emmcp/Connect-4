@@ -101,13 +101,16 @@ class GUI: # interface elements
 
     def __init__(self):
         self.root = root
+        self.board = Board() # initialize previous class
         self.board_initializer()
         self.button_initalizing() # call functions here so easier to call at end
-        self.board = Board() # initialize previous class
 
     def clicked(self, c): # increment pieces in column, visually add piece
         self.board.play_piece(c)
         self.update_board()
+        self.board.check_win()
+        if self.board.check_win():
+            messagebox.showinfo("Game Over!", f" Player {self.board.current_player["Player Number"]} wins! The game will reset if you click ok.")
 
     def button_initalizing(self): # making the buttons
         # lambda allows one to be added to each corresponding column of self.pieces_in_rows
@@ -130,7 +133,7 @@ class GUI: # interface elements
         self.buttonD, self.buttonE, self.buttonF, self.buttonG]
     
     def board_initializer(self): # needs rest of parts
-        self.root.configure(bg='navy')
+        self.root.configure(bg='blue')
         self.board_canvas = Canvas(root, width=700, height=600, bg ='blue')
         self.board_canvas.grid(row=3, column=1, columnspan=7)
         self.circles = [[self.board_canvas.create_oval(j * 100, i * 100, (j +1) * 100, (i + 1) * 100, fill='white') for j in range(7)] for i in range(6)]
