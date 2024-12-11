@@ -147,12 +147,12 @@ class GameInstructions:
         messagebox.showinfo("Connect 4 Instructions", "\n".join(self.instructions))
 
 class GameOverPopupWindow:
-    def __init__(self,game):
-        self.game = game
-        self.winner = None
-
-    def gameover_popup(self, winner):
+    def __init__(self, winner, game):
         self.winner = winner
+        self.game = game
+        self.display_popup()
+
+    def gameover_popup(self):
         player_input = messagebox.askyesno(
             "Game Over!",
             f" Player {self.winner} wins! Would you like to restart the game?"
