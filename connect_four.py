@@ -39,9 +39,6 @@ class Board: # game logic, game progress
             self.last_played = (self.pieces_in_rows[c], c) # allows to look for surrounding area to see if there's a win
             self.pieces_in_rows[c] += 1 # adds one to piece
             print(self.last_played)
-            self.check_win()
-            if self.check_win():
-                messagebox.showinfo("We have a winner!", f"Player {self.current_player['Player Number']} has won!")
             self.players_swap()
         else:
             messagebox.showinfo("Error: Column is full", "Pick another column.")
