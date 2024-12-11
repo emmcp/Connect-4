@@ -193,13 +193,13 @@ class Game:
         print("Restart initiated -- resetting the game...")        
         self.clear_board()
         self.setup_new_game()
-        self.play_game()
+        self.start_game()
 
      def clear_board(self):
         print("Board cleared.")
         self.gui.reset_canvas()
 
-    def new_game_setup(self):
+    def setup_new_game(self):
         print("Setting up new game...")
         self.winner = None
         
