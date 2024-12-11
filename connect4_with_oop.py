@@ -147,12 +147,12 @@ class GameInstructions:
         messagebox.showinfo("Connect 4 Instructions", "\n".join(self.instructions))
 
 class GameOverPopupWindow:
-    def __init__(self,game):
-        self.game = game
-        self.winner = None
-
-    def gameover_popup(self, winner):
+    def __init__(self, winner, game):
         self.winner = winner
+        self.game = game
+        self.gameover_popup()
+
+    def gameover_popup(self):
         player_input = messagebox.askyesno(
             "Game Over!",
             f" Player {self.winner} wins! Would you like to restart the game?"
@@ -165,37 +165,46 @@ class GameOverPopupWindow:
             self.game.exit_game()
             
     def game_restart(self):
-        self.game.restart()
+        self.game.clear_board()
+        self.game.setup_new_game()
+        print("The game has been reset.") 
 
 class Game:
     def __init__(self):
         self.root = root
-        self.root.withdraw()
+        self.gui = GUI(self)
+        self.winner = None
         self.start_game()
-        self.gui = GUI()
-        self.winner = self.Board.last_played()
-        self.GameOverPopupWindow = GameOverPopupWindow(self.winner, self.game)
 
     def start_game(self):
+        GameInstructions()
         self.play_game()
 
     def play_game(self):
-        self.winner
-        self.end_game(winner)
+        self.winner = 1
+        self.end_game(self.winner)
 
     def end_game(self, winner):
-        self.GameOverPopupWindow()
+        self.winner = winner
+        self.popup_window = GameOverPopupWindow(self.winner, self)
 
     # restarts the game 
     def restart(self):
-        print("Game Restarted!")
-        self.root.destroy()
-        self.__init__()
-
+        print("Restarting the game...")        
+        self.clear_board()
+        self.setup_new_game()
+        self.play_game()
+        
     # officially exits game 
     def exit_game(self):
         print("Exiting the game...")
         self.root.destroy()
+
+    def clear_board(self):
+        self.gui.reset_canvas()
+
+    def new_game_setup(self):
+        print("Setting up new game...")
 
 # Emma
 # class GameSave:
