@@ -31,18 +31,14 @@ class Board: # game logic, game progress
         self.board_game = [[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0]] # 6 rows with seven columns
         self.Players = Players()
         self.current_player = self.Players.player1 # starts off with a player 1
-        self.last_played = None
+        self.last_played = None  # placeholder until it's defined below
+        self.GameOverPopupWindow = GameOverPopupWindow(None)
 
     def play_piece(self, c):
         if self.pieces_in_rows[c] < 6:
             self.board_game[self.pieces_in_rows[c]][c] = self.current_player["Player Number"]
             self.last_played = (self.pieces_in_rows[c], c) # allows to look for surrounding area to see if there's a win
             self.pieces_in_rows[c] += 1 # adds one to piece
-            print(self.last_played)
-            self.check_win()
-            if self.check_win():
-                messagebox.showinfo("We have a winner!", f"Player {self.current_player['Player Number']} has won!")
-            self.players_swap()
         else:
             messagebox.showinfo("Error: Column is full", "Pick another column.")
 
@@ -80,7 +76,7 @@ class Board: # game logic, game progress
             row, column = self.last_played # takes first element to equal row, second to equal column
 
             for c in range(-3, 1): # checks horizontal
-                play = [self.board_game[row - c + t][column + c + t] for t in range(0, 4)]
+                play = [self.board_game[row + c + t][column - c - t] for t in range(0, 4)]
                 if all(play[t] == play[0] for t in range(0,4)): # returns True if all are player 1 or player 2
                     return True
         except:
@@ -108,6 +104,9 @@ class GUI: # interface elements
     def clicked(self, c): # increment pieces in column, visually add piece
         self.board.play_piece(c)
         self.update_board()
+        if self.board.check_win():
+            self.board.GameOverPopupWindow.gameover_popup(self.board.current_player["Player Number"])
+        self.board.players_swap()
 
     def button_initalizing(self): # making the buttons
         # lambda allows one to be added to each corresponding column of self.pieces_in_rows
@@ -125,29 +124,19 @@ class GUI: # interface elements
         self.buttonF.grid(row=2, column=6)
         self.buttonG = Button(root, text="Column G", command = lambda: self.clicked(6), bg = "Navy")
         self.buttonG.grid(row=2, column=7)
-
-        self.buttons = [self.buttonA, self.buttonB, self.buttonB, self.buttonC, 
-        self.buttonD, self.buttonE, self.buttonF, self.buttonG]
     
     def board_initializer(self): # needs rest of parts
-        self.root.configure(bg='navy')
         self.board_canvas = Canvas(root, width=700, height=600, bg ='blue')
         self.board_canvas.grid(row=3, column=1, columnspan=7)
         self.circles = [[self.board_canvas.create_oval(j * 100, i * 100, (j +1) * 100, (i + 1) * 100, fill='white') for j in range(7)] for i in range(6)]
 
     def update_board(self):
-        for row in range(6):
-            for col in range(7):
-                player_number = self.board.board_game[row][col]
-                color = 'white'
-                if player_number == 1:
-                    color = self.board.Players.player1['Color']
-                elif player_number == 2:
-                    color = self.board.Players.player2['Color']
-                bottom_row = 5 - row
-                self.board_canvas.itemconfig(self.circles[bottow_row][col], fill=color)
+        row, col = self.board.last_played
+        color = self.board.current_player["Color"]
+        bottom_row = 5 - row
+        self.board_canvas.itemconfig(self.circles[bottom_row][col], fill=color)
 
-# Charlotte pop-up window 
+# Charlotte pop-up window
 class GameInstructions:
     def __init__(self):
         self.instructions = ("Take turns dropping one of your pieces onto the board.", 
@@ -158,12 +147,12 @@ class GameInstructions:
         messagebox.showinfo("Connect 4 Instructions", "\n".join(self.instructions))
 
 class GameOverPopupWindow:
-    def __init__(self, winner, game):
-        self.winner = winner
+    def __init__(self,game):
         self.game = game
-        self.display_gameover()
+        self.winner = None
 
-    def gameover_popup(self):
+    def gameover_popup(self, winner):
+        self.winner = winner
         player_input = messagebox.askyesno(
             "Game Over!",
             f" Player {self.winner} wins! Would you like to restart the game?"
@@ -178,22 +167,24 @@ class GameOverPopupWindow:
     def game_restart(self):
         self.game.restart()
 
-class Game: 
+class Game:
     def __init__(self):
-        self.root = TK()
+        self.root = root
         self.root.withdraw()
         self.start_game()
+        self.gui = GUI()
+        self.winner = self.Board.last_played()
+        self.GameOverPopupWindow = GameOverPopupWindow(self.winner, self.game)
 
     def start_game(self):
-        GameInstructions() 
         self.play_game()
 
     def play_game(self):
-        winner = 1
+        self.winner
         self.end_game(winner)
 
     def end_game(self, winner):
-        GameOverPopupWindow(winner, self) 
+        self.GameOverPopupWindow()
 
     # restarts the game 
     def restart(self):
@@ -225,11 +216,11 @@ class Game:
 #         self.con.commit()
 
 # calling functions
-b = Board()
-g = GUI()
+#g = GUI()
 i = GameInstructions()
 #data = GameSave()
-root.mainloop()
 
 # starts the game
 game = Game()
+
+root.mainloop()
