@@ -157,24 +157,6 @@ class GameInstructions:
     def display_instructions(self):
         messagebox.showinfo("Connect 4 Instructions", "\n".join(self.instructions))
 
-class GameOverPopupWindow:
-    def __init__(self, winner, game):
-        self.winner = winner
-        self.game = game
-        self.display_gameover()
-
-    def gameover_popup(self):
-        player_input = messagebox.askyesno(
-            "Game Over!",
-            f" Player {self.winner} wins! Would you like to restart the game?"
-        )
-        if player_input:
-            print("Restarting the game...")
-            self.game.restart()
-        else:
-            print("Exiting the game...")
-            self.game.exit_game()
-
 # We need a function to restart the game by clearing the grid
 # We need a function to officially end the game 
 
