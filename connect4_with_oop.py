@@ -76,7 +76,7 @@ class Board: # game logic, game progress
             row, column = self.last_played # takes first element to equal row, second to equal column
 
             for c in range(-3, 1): # checks horizontal
-                play = [self.board_game[row + c + t][column - c - t] for t in range(0, 4)]
+                play = [self.board_game[row - c - t][column + c + t] for t in range(0, 4)]
                 if all(play[t] == play[0] for t in range(0,4)): # returns True if all are player 1 or player 2
                     return True
         except:
