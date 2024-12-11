@@ -195,7 +195,7 @@ class Game:
         self.setup_new_game()
         self.start_game()
 
-     def clear_board(self):
+    def clear_board(self):
         print("Board cleared.")
         self.gui.reset_canvas()
 
