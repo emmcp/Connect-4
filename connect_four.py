@@ -157,8 +157,7 @@ class GameInstructions:
     def display_instructions(self):
         messagebox.showinfo("Connect 4 Instructions", "\n".join(self.instructions))
 
-# We need a function to restart the game by clearing the grid
-# We need a function to officially end the game 
+# We need a function to clear the board and restart the game 
 
 
 # Emma
