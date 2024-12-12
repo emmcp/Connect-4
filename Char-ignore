@@ -122,7 +122,7 @@ class GUI: # interface elements
 
     def __init__(self):
         self.root = root
-        self.board = Board() # initialize previous class
+        self.board = Board(self) # initialize previous class
         self.board_initializer()
         self.button_initalizing() # call functions here so easier to call at end
 
