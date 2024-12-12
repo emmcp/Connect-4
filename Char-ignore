@@ -117,6 +117,7 @@ class GUI: # interface elements
 
     def clicked(self, c): # increment pieces in column, visually add piece
         self.board.play_piece(c)
+        self.update_board()
 
     def restart_game(self):
         self.board.clear_board()
