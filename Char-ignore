@@ -34,7 +34,8 @@ class Board: # game logic, game progress
         self.last_played = None
 
     def play_piece(self, c):
-        if self.pieces_in_rows[c] >= self.rows:
+        row = self.rows - self.pieces_in_rows[c] - 1
+        if row < 0:
             messagebox.showerror("Error", "Column is already full!")
             return
 
