@@ -157,7 +157,16 @@ class GameInstructions:
     def display_instructions(self):
         messagebox.showinfo("Connect 4 Instructions", "\n".join(self.instructions))
 
-# We need a function to clear the board and restart the game 
+# We need a function to clear the board 
+    def clear_board(self):
+        self.board_game = [[0 for i in range(self.columns)] for j in range(self.rows)]
+        self.pieces_in_rows = [0] * self.columns
+        
+# We need a function to restart the game 
+    def restart_game(self):
+        self.clear_board()
+        self.current_player = self.Players.player1
+    
 
 
 # Emma
