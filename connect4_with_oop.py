@@ -31,7 +31,7 @@ class Board: # game logic, game progress
         self.board_game = [[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0]] # 6 rows with seven columns
         self.Players = Players()
         self.current_player = self.Players.player1 # starts off with a player 1
-        self.last_played = (0, 0)  # placeholder until it's defined below
+        self.last_played = None  # placeholder until it's defined below
 
     def play_piece(self, c):
         if self.pieces_in_rows[c] < 6:
