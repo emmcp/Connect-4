@@ -43,6 +43,8 @@ class Board: # game logic, game progress
         self.last_played = (row, c)
         self.pieces_in_rows[c] += 1
 
+        self.update_board()
+
         if self.check_win():
             messagebox.showinfo("Game Over!", f"Player {self.current_player['Player Number']} wins!")
             for button in self.buttons:
@@ -115,17 +117,12 @@ class GUI: # interface elements
 
     def clicked(self, c): # increment pieces in column, visually add piece
         self.board.play_piece(c)
-        self.update_board() 
-
-        if self.board.check_win():
-            messagebox.showinfo("Game Over!", f" Player {self.board.current_player['Player Number']} wins! The game will reset if you click Ok.")
-            for button in self.buttons:
-                button['state'] = 'disabled'
 
     def restart_game(self):
         self.board.clear_board()
         for button in self.buttons:
             button['state'] = 'normal'
+        self.update_board()
 
     def button_initalizing(self): # making the buttons
         # lambda allows one to be added to each corresponding column of self.pieces_in_rows
@@ -152,7 +149,7 @@ class GUI: # interface elements
         self.board_canvas = Canvas(root, width=700, height=600, bg ='blue')
         self.board_canvas.grid(row=3, column=1, columnspan=7)
         self.circles = [[self.board_canvas.create_oval(j * 100, i * 100, (j +1) * 100, (i + 1) * 100, fill='white') for j in range(7)] for i in range(6)]
-        restart_button = Button(root, text = 'Restart', command = self.restart_game)
+        restart_button = Button(root, text='Restart', command=self.restart_game)
         restart_button.grid(row=6, column=7)
 
     def update_board(self):
@@ -164,8 +161,7 @@ class GUI: # interface elements
                     color = self.board.Players.player1['Color']
                 elif player_number == 2:
                     color = self.board.Players.player2['Color']
-                bottom_row = 5 - row
-                self.board_canvas.itemconfig(self.circles[bottom_row][col], fill=color)
+                self.board_canvas.itemconfig(self.circles[row][col], fill=color)
 
 # Charlotte pop-up window 
 class GameInstructions:
