@@ -42,7 +42,13 @@ class Board: # game logic, game progress
         self.board_game[row][c] = self.current_player["Player Number"]
         self.last_played = (row, c)
         self.pieces_in_rows[c] += 1
-        self.players_swap()
+
+        if self.check_win():
+            messagebox.showinfo("Game Over!", f"Player {self.current_player['Player Number']} wins!")
+            for button in self.buttons:
+                button['state'] = 'disabled'
+        else:
+            self.players_swap()
 
     def check_win(self):
         try: # rows
