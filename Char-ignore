@@ -34,18 +34,15 @@ class Board: # game logic, game progress
         self.last_played = None
 
     def play_piece(self, c):
-        row = self.rows - self.pieces_in_rows[c] - 1
-        if row < 0:
+        if self.pieces_in_rows[c] == self.rows:
             messagebox.showerror("Error", "Column is already full!")
             return
 
-            self.board_game[self.pieces_in_rows[c]][c] = self.current_player["Player Number"]
-            self.last_played = (self.pieces_in_rows[c], c) # allows to look for surrounding area to see if there's a win
-            self.pieces_in_rows[c] += 1 # adds one to piece
-            print(self.last_played)
-            self.players_swap()
-        else:
-            messagebox.showinfo("Error: Column is full", "Pick another column.")
+        row = self.rows - self.pieces_in_rows[c] - 1
+        self.board_game[row][c] = self.current_player["Player Number"]
+        self.last_played = (row, c)
+        self.pieces_in_rows[c] += 1
+        self.players_swap()
 
     def check_win(self):
         try: # rows
