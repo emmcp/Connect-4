@@ -91,6 +91,10 @@ class Board: # game logic, game progress
             self.current_player = self.Players.player2
         else:
             self.current_player = self.Players.player1
+
+    def clear_board(self):
+        self.pieces_in_rows = [0] * self.columns
+        self.board_game = [[0] * self.columns for _ in range(self.rows)]
     
 # AK
 class GUI: # interface elements
