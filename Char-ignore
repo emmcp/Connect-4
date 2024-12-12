@@ -1,7 +1,8 @@
 from tkinter import *
 from tkinter import messagebox
-import random
-import sqlite3
+import random 
+import sqlite3 
+
 
 global root # allows root to be accessed through all classes
 root = Tk()
@@ -22,8 +23,10 @@ class Players:
         self.player2_color = random.choice(self.colors)
         self.player2.update({"Color": self.player2_color})
 
-class Board: # game logic, game progress
+    def reset_players(self):
+        self.__init__()
 
+class Board: # game logic, game progress
     def __init__(self):
         self.rows = 6
         self.columns = 7
@@ -32,6 +35,7 @@ class Board: # game logic, game progress
         self.Players = Players()
         self.current_player = self.Players.player1 # starts off with a player 1
         self.last_played = None
+        
 
     def play_piece(self, c):
         if self.pieces_in_rows[c] < 6:
@@ -83,7 +87,7 @@ class Board: # game logic, game progress
         except:
             pass
 
-    def players_swap(self):
+     def players_swap(self):
         self.current_player["Turns Taken"] +=1
         self.current_player["Pieces"] -= 1
         if self.current_player == self.Players.player1:
@@ -91,16 +95,21 @@ class Board: # game logic, game progress
         else:
             self.current_player = self.Players.player1
 
+    # Charlotte 
     def clear_board(self):
+        # resets board attributes
         self.pieces_in_rows = [0] * self.columns
         self.board_game = [[0 for _ in range(self.columns)] for _ in range(self.rows)]
         self.last_played = None
         self.game_over = False
 
+    # Charlotte 
     def restart_game(self):
+        # resets board and players 
         self.clear_board()
-        self.Players.reset_players()
-        self.current_player = self.Players.player1
+        self.Players.reset_players() 
+        self.current_player = self.Players.player1 #resets to initial player
+
     
 # AK
 class GUI: # interface elements
@@ -116,10 +125,16 @@ class GUI: # interface elements
     def clicked(self, c): # increment pieces in column, visually add piece
         self.board.play_piece(c)
         self.update_board()
-        self.board.check_win()
-        if self.board.check_win():
-            messagebox.showinfo("Game Over!", f" Player {self.board.current_player["Player Number"]} wins! The game will reset if you click ok.")
 
+        if self.board.check_win():
+            messagebox.showinfo("Game Over!", f"Player {self.board.current_player['Player Number']} wins! The game will now reset if you select OK.")
+            self.restart_game()
+
+    def restart_game(self):
+        self.board.restart_game() # resets game grid
+        self.update_board() # resets GUI
+        
+            
     def button_initalizing(self): # making the buttons
         # lambda allows one to be added to each corresponding column of self.pieces_in_rows
         self.buttonA = Button(root, text="Column A", command = lambda: self.clicked(0), bg = "Navy")
@@ -137,27 +152,40 @@ class GUI: # interface elements
         self.buttonG = Button(root, text="Column G", command = lambda: self.clicked(6), bg = "Navy")
         self.buttonG.grid(row=2, column=7)
 
-        self.buttons = [self.buttonA, self.buttonB, self.buttonB, self.buttonC, 
-        self.buttonD, self.buttonE, self.buttonF, self.buttonG]
+        self.buttons = [
+            self.buttonA, self.buttonB, self.buttonC, self.buttonD,
+            self.buttonE, self.buttonF, self.buttonG
+        ]
+
+        # restart button 
+        self.restart_button = Button(
+            root, text="Restart Game", command=self.restart_game, bg="Green", fg="White"
+        )
+        self.restart_button.grid(row=4, column=1, columnspan=7, sticky="nsew")
+
+           
     
-    def board_initializer(self): # needs rest of parts
+    def board_initializer(self):
         self.root.configure(bg='blue')
         self.board_canvas = Canvas(root, width=700, height=600, bg ='blue')
         self.board_canvas.grid(row=3, column=1, columnspan=7)
-        self.circles = [[self.board_canvas.create_oval(j * 100, i * 100, (j +1) * 100, (i + 1) * 100, fill='white') for j in range(7)] for i in range(6)]
+        self.circles = [[self.board_canvas.create_oval(j * 100, i * 100, (j + 1) * 100, (i + 1) * 100, fill='white')
+                         for j in range(7)] for i in range(6)]
 
     def update_board(self):
         for row in range(6):
             for col in range(7):
-                player_number = self.board.board_game[row][col]
-                color = 'white'
-                if player_number == 1:
-                    color = self.board.Players.player1['Color']
-                elif player_number == 2:
-                    color = self.board.Players.player2['Color']
-                bottom_row = 5 - row
-                self.board_canvas.itemconfig(self.circles[bottom_row][col], fill=color)
+                    player_number = self.board.board_game[row][col]
+                    if player_number == 1:
+                        color = self.board.Players.player1['Color']
+                    elif player_number == 2:
+                        color = self.board.Players.player2['Color']
+                    else:
+                        color = 'white' #default color
+                    bottom_row = 5 - row
+                    self.board_canvas.itemconfig(self.circles[bottom_row][col], fill=color)
 
+    
 # Charlotte pop-up window 
 class GameInstructions:
     def __init__(self):
@@ -167,8 +195,6 @@ class GameInstructions:
     
     def display_instructions(self):
         messagebox.showinfo("Connect 4 Instructions", "\n".join(self.instructions))
-
-    
 
 
 # Emma
@@ -197,3 +223,8 @@ root.mainloop()
 
 # starts the game
 game = Game()
+
+
+
+
+
