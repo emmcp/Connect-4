@@ -104,7 +104,6 @@ class GUI: # interface elements
     def clicked(self, c): # increment pieces in column, visually add piece
         self.board.play_piece(c)
         self.update_board()
-        self.root.update_idletasks()
         if self.board.check_win():
             data.save_winners(self.board)
             self.GameOverPopupWindow.gameover_popup(self.board.current_player["Player Number"])
@@ -133,21 +132,29 @@ class GUI: # interface elements
         self.board_canvas = Canvas(root, width=700, height=600, bg ='blue')
         self.board_canvas.grid(row=3, column=1, columnspan=7)
         self.circles = [[self.board_canvas.create_oval(j * 100, i * 100, (j +1) * 100, (i + 1) * 100, fill='white') for j in range(7)] for i in range(6)]
-
     def score_tracker(self):
         player1wins, player2wins = data.query_it()
+        best_win = data.win_count()
+        print(player1wins, player2wins)
 
-        self.scores = Label(root, text="Player Stats", bg= "blue", font=("Arial", 13))
+        self.scores = Label(root, text="Player Stats", bg= "blue", font=("Arial", 13, "bold"))
         self.scores.grid(row=4, column=1, columnspan=4)
 
-        self.leaderboard = Label(root, text="Leaderboard", bg= "blue", font=("Arial", 13))
-        self.leaderboard.grid(row=4, column=4, columnspan=4)
+        self.leaderboard = Label(root, text="Leaderboard", bg= "blue", font=("Arial", 13, "bold"))
+        self.leaderboard.grid(row=4, column=5, columnspan=4)
 
-        self.player1_wins = Label(root, text=f"Player 1 Win Count: {player1wins}", bg= "blue", font=("Arial", 13))
+        self.player1_wins = Label(root, text=f"Player 1 Score: {player1wins}", bg= "blue", font=("Arial", 13))
         self.player1_wins.grid(row=5, column=1, columnspan=2)
 
-        self.player2_wins = Label(root, text=f"Player 2 Win Count: {player2wins} ", bg= "blue", font=("Arial", 13))
+        self.player2_wins = Label(root, text=f"Player 2 Score: {player2wins} ", bg= "blue", font=("Arial", 13))
         self.player2_wins.grid(row=5, column=3, columnspan=2)
+
+        if player1wins==0 and player2wins==0:
+            self.no_top_score = Label(root, text="No high score yet", bg="blue",font=("Arial", 13))
+            self.no_top_score.grid(row=5, column=5, columnspan=3)
+        else:
+            self.topscore = Label(root, text=f"Player {self.board.current_player["Player Number"]} won in {best_win} moves", bg="blue", font=("Arial", 13))
+            self.topscore.grid(row=5, column=5, columnspan=3)
 
     def update_board(self):
         row, col = self.board.last_played
@@ -183,12 +190,12 @@ class GameOverPopupWindow:
             self.game_restart()
         else:
             self.game.exit_game()
+            data.reset_game_stats()
             
     def game_restart(self):
         self.game.clear_board()
         self.game.setup_new_game()
         data.query_it()
-
 
 class Game:
     def __init__(self):
@@ -207,10 +214,10 @@ class Game:
     # officially exits game 
     def exit_game(self):
         root.destroy()
-
+        
 # Emma
 class GameSave:
-# delete database when game closed out
+# delete gatabase when game closed out
 # display best scores
 
     def __init__(self):
@@ -228,6 +235,7 @@ class GameSave:
         self.con.commit()
 
     def query_it(self):
+        # win count
         player1_win_count = self.cur.execute("SELECT Player_1_Score, Winner FROM gameprogress WHERE Winner=1")
         player1_win_count = len([row for row in player1_win_count])
 
@@ -235,6 +243,29 @@ class GameSave:
         player2_win_count = len([row for row in player2_win_count])
 
         return player1_win_count, player2_win_count
+    
+    def win_count(self):
+        player1_win_count, player2_win_count = self.query_it()
+        counter = 0
+        if counter < 1:
+            if player1_win_count > player2_win_count:
+                best_score = player1_win_count
+                counter += 1
+            else:
+                best_score = player2_win_count
+                counter += 1
+        else:
+            if best_score > player1_win_count:
+                best_score = player1_win_count
+            elif best_score > player2_win_count:
+                best_score = player2_win_count
+        
+        return best_score
+
+    def reset_game_stats(self):
+        self.scrap_data = self.cur.execute('DROP TABLE gameprogress')
+        self.con.commit()
+        self.con.close()
 
 #initalizing game and data save
 data = GameSave()
