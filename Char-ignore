@@ -163,7 +163,7 @@ class GUI: # interface elements
 class GameInstructions:
     def __init__(self):
         self.instructions = ("Take turns dropping one of your pieces onto the board.", 
-        "The first player to get four pieces in a row, vertically, horizontally, or diagnoally, wins!")
+        "The first player to get four pieces in a row, vertically, horizontally, or diagonally, wins the game!")
         self.display_instructions()
     
     def display_instructions(self):
