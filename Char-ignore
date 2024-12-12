@@ -103,6 +103,17 @@ class Board: # game logic, game progress
     def clear_board(self):
         self.pieces_in_rows = [0] * self.columns
         self.board_game = [[0] * self.columns for _ in range(self.rows)]
+
+    def update_board(self):
+        for row in range(6):
+            for col in range(7):
+                player_number = self.board.board_game[row][col]
+                color = 'white'
+                if player_number == 1:
+                    color = self.board.Players.player1['Color']
+                elif player_number == 2:
+                    color = self.board.Players.player2['Color']
+                self.board_canvas.itemconfig(self.circles[row][col], fill=color)
     
 # AK
 class GUI: # interface elements
@@ -152,17 +163,6 @@ class GUI: # interface elements
         self.circles = [[self.board_canvas.create_oval(j * 100, i * 100, (j +1) * 100, (i + 1) * 100, fill='white') for j in range(7)] for i in range(6)]
         restart_button = Button(root, text='Restart', command=self.restart_game)
         restart_button.grid(row=6, column=7)
-
-    def update_board(self):
-        for row in range(6):
-            for col in range(7):
-                player_number = self.board.board_game[row][col]
-                color = 'white'
-                if player_number == 1:
-                    color = self.board.Players.player1['Color']
-                elif player_number == 2:
-                    color = self.board.Players.player2['Color']
-                self.board_canvas.itemconfig(self.circles[row][col], fill=color)
 
 # Charlotte pop-up window 
 class GameInstructions:
