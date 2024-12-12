@@ -146,6 +146,17 @@ class GUI: # interface elements
                     color = self.board.Players.player2['Color']
                 bottom_row = 5 - row
                 self.board_canvas.itemconfig(self.circles[bottom_row][col], fill=color)
+    def rest_game():
+        self.board.reset_game_state()
+        self.board.reset_players()
+
+        # Reset the GUI representation of the board
+        for row in range(6):
+            for col in range(7):
+                self.board_canvas.itemconfig(self.circles[row][col], fill='white')
+
+    # Update the display to reflect the reset
+        self.root.update()
 
 # Charlotte pop-up window 
 class GameInstructions:
