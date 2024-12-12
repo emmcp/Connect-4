@@ -31,7 +31,7 @@ class Board: # game logic, game progress
         self.board_game = [[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0]] # 6 rows with seven columns
         self.Players = Players()
         self.current_player = self.Players.player1 # starts off with a player 1
-        self.last_played = None  # placeholder until it's defined below
+        self.last_played = (0, 0)  # placeholder until it's defined below
 
     def play_piece(self, c):
         if self.pieces_in_rows[c] < 6:
@@ -94,17 +94,18 @@ class GUI: # interface elements
 # Needs a circle grid (creating the board)
 # Color correspondence for turns (can probably use modulus truth, if the turn is even, then whatever color goes first)
 
-    def __init__(self):
+    def __init__(self, game):
         self.root = root
         self.board_initializer()
         self.button_initalizing() # call functions here so easier to call at end
         self.board = Board() # initialize previous class
+        self.GameOverPopupWindow = GameOverPopupWindow(game)
 
     def clicked(self, c): # increment pieces in column, visually add piece
         self.board.play_piece(c)
         self.update_board()
         if self.board.check_win():
-            self.board.GameOverPopupWindow.gameover_popup(self.board.current_player["Player Number"])
+            self.GameOverPopupWindow.gameover_popup(self.board.current_player["Player Number"])
         self.board.players_swap()
 
     def button_initalizing(self): # making the buttons
@@ -135,6 +136,10 @@ class GUI: # interface elements
         bottom_row = 5 - row
         self.board_canvas.itemconfig(self.circles[bottom_row][col], fill=color)
 
+    def reset_canvas(self): # allows access to Board reset in class Game
+        self.board = Board()
+        self.board_initializer()
+
 # Charlotte pop-up window
 class GameInstructions:
     def __init__(self):
@@ -147,65 +152,40 @@ class GameInstructions:
         messagebox.showinfo("Connect 4 Instructions", "\n".join(self.instructions))
 
 class GameOverPopupWindow:
-    def __init__(self, winner, game):
-        self.winner = winner
+    def __init__(self,game):
         self.game = game
-        self.gameover_popup()
 
-    def gameover_popup(self):
+    def gameover_popup(self, winner):
         player_input = messagebox.askyesno(
             "Game Over!",
-            f" Player {self.winner} wins! Would you like to restart the game?"
+            f" Player {winner} wins! Would you like to restart the game?"
         )
         if player_input:
-            print("Restarting the game...")
             self.game_restart()
         else:
-            print("Exiting the game...")
             self.game.exit_game()
             
     def game_restart(self):
         self.game.clear_board()
         self.game.setup_new_game()
-        print("The game has been reset.") 
 
 class Game:
     def __init__(self):
-        self.root = root
         self.gui = GUI(self)
-        self.winner = None
         self.start_game()
 
     def start_game(self):
         GameInstructions()
-        self.play_game()
-
-    def play_game(self):
-        self.winner = 1
-        self.end_game(self.winner)
-
-    def end_game(self, winner):
-        self.popup_window = GameOverPopupWindow(winner, self)
-
-    # restarts the game 
-    def restart(self):
-        print("Restart initiated -- resetting the game...")        
-        self.clear_board()
-        self.setup_new_game()
-        self.start_game()
 
     def clear_board(self):
-        print("Board cleared.")
         self.gui.reset_canvas()
 
     def setup_new_game(self):
-        print("Setting up new game...")
         self.winner = None
         
     # officially exits game 
     def exit_game(self):
-        print("Exiting the game...")
-        self.root.destroy()
+        root.destroy()
 
 # Emma
 # class GameSave:
@@ -226,8 +206,6 @@ class Game:
 #         self.con.commit()
 
 # calling functions
-#g = GUI()
-i = GameInstructions()
 #data = GameSave()
 
 # starts the game
