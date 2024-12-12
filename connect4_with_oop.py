@@ -73,9 +73,8 @@ class Board: # game logic, game progress
 
         try: #diagonals bottom right to top left
             row, column = self.last_played # takes first element to equal row, second to equal column
-
             for c in range(-3, 1): # checks horizontal
-                play = [self.board_game[row - c - t][column + c + t] for t in range(0, 4)]
+                play = [self.board_game[row + c + t][column - c - t] for t in range(0, 4)]
                 if all(play[t] == play[0] for t in range(0,4)): # returns True if all are player 1 or player 2
                     return True
         except:
@@ -100,35 +99,54 @@ class GUI: # interface elements
         self.button_initalizing() # call functions here so easier to call at end
         self.board = Board() # initialize previous class
         self.GameOverPopupWindow = GameOverPopupWindow(game)
+        self.score_tracker()
 
     def clicked(self, c): # increment pieces in column, visually add piece
         self.board.play_piece(c)
         self.update_board()
         if self.board.check_win():
+            data.save_winners(self.board)
             self.GameOverPopupWindow.gameover_popup(self.board.current_player["Player Number"])
+            self.score_tracker()
         self.board.players_swap()
 
     def button_initalizing(self): # making the buttons
         # lambda allows one to be added to each corresponding column of self.pieces_in_rows
-        self.buttonA = Button(root, text="Column A", command = lambda: self.clicked(0), bg = "Navy")
+        self.buttonA = Button(root, text="Column A", command = lambda: self.clicked(0), bg = "blue", borderwidth = 0)
         self.buttonA.grid(row=2, column=1)
-        self.buttonB = Button(root, text="Column B", command = lambda: self.clicked(1), bg = "Navy")
+        self.buttonB = Button(root, text="Column B", command = lambda: self.clicked(1), bg = "blue", borderwidth = 0)
         self.buttonB.grid(row=2, column=2)
-        self.buttonC = Button(root, text="Column C", command = lambda: self.clicked(2), bg = "Navy")
+        self.buttonC = Button(root, text="Column C", command = lambda: self.clicked(2), bg = "blue", borderwidth = 0)
         self.buttonC.grid(row=2, column=3)
-        self.buttonD = Button(root, text="Column D", command = lambda: self.clicked(3), bg = "Navy")
+        self.buttonD = Button(root, text="Column D", command = lambda: self.clicked(3), bg = "blue", borderwidth = 0)
         self.buttonD.grid(row=2, column=4)
-        self.buttonE = Button(root, text="Column E", command = lambda: self.clicked(4), bg = "Navy")
+        self.buttonE = Button(root, text="Column E", command = lambda: self.clicked(4), bg = "blue", borderwidth = 0)
         self.buttonE.grid(row=2, column=5)
-        self.buttonF = Button(root, text="Column F", command = lambda: self.clicked(5), bg = "Navy")
+        self.buttonF = Button(root, text="Column F", command = lambda: self.clicked(5), bg = "blue", borderwidth = 0)
         self.buttonF.grid(row=2, column=6)
-        self.buttonG = Button(root, text="Column G", command = lambda: self.clicked(6), bg = "Navy")
+        self.buttonG = Button(root, text="Column G", command = lambda: self.clicked(6), bg = "blue", borderwidth = 0)
         self.buttonG.grid(row=2, column=7)
     
     def board_initializer(self): # needs rest of parts
+        self.root.configure(bg='blue')
         self.board_canvas = Canvas(root, width=700, height=600, bg ='blue')
         self.board_canvas.grid(row=3, column=1, columnspan=7)
         self.circles = [[self.board_canvas.create_oval(j * 100, i * 100, (j +1) * 100, (i + 1) * 100, fill='white') for j in range(7)] for i in range(6)]
+
+    def score_tracker(self):
+        player1wins, player2wins = data.query_it()
+
+        self.scores = Label(root, text="Player Stats", bg= "blue", font=("Arial", 13))
+        self.scores.grid(row=4, column=1, columnspan=4)
+
+        self.leaderboard = Label(root, text="Leaderboard", bg= "blue", font=("Arial", 13))
+        self.leaderboard.grid(row=4, column=4, columnspan=4)
+
+        self.player1_wins = Label(root, text=f"Player 1 Win Count: {player1wins}", bg= "blue", font=("Arial", 13))
+        self.player1_wins.grid(row=5, column=1, columnspan=2)
+
+        self.player2_wins = Label(root, text=f"Player 2 Win Count: {player2wins} ", bg= "blue", font=("Arial", 13))
+        self.player2_wins.grid(row=5, column=3, columnspan=2)
 
     def update_board(self):
         row, col = self.board.last_played
@@ -144,7 +162,7 @@ class GUI: # interface elements
 class GameInstructions:
     def __init__(self):
         self.instructions = ("Take turns dropping one of your pieces onto the board.", 
-        "The first player to get four pieces in a row, vertically, horizontally, or diagonally, wins the game!"
+        "The first player to get four pieces in a row, vertically, horizontally, or diagonally, wins!"
         )
         self.display_instructions()
     
@@ -168,6 +186,8 @@ class GameOverPopupWindow:
     def game_restart(self):
         self.game.clear_board()
         self.game.setup_new_game()
+        data.query_it()
+
 
 class Game:
     def __init__(self):
@@ -188,27 +208,35 @@ class Game:
         root.destroy()
 
 # Emma
-# class GameSave:
-# Needs connection of removing pieces
-# Needs to restart after game is reset
-# Needs to start with data if re-opened
+class GameSave:
+# delete database when game closed out
+# display best scores
 
-#     def __init__(self):
-#         self.con = sqlite3.connect('game_progress.db')
-#         self.cur = self.con.cursor()
-#         self.retrieve_data()
+    def __init__(self):
+        self.con = sqlite3.connect('game_progress.db')
+        self.cur = self.con.cursor()
+        self.cur.execute('''CREATE TABLE IF NOT EXISTS gameprogress
+                (Player_1_Score BIT, Player_2_Score BIT, Winner BIT)''')
+        self.con.commit()
 
-#     def retrieve_data(self):
-#         self.cur.execute('''CREATE TABLE IF NOT EXISTS gameprogress
-#                 (Player_1_Score BIT, Player_2_Score BIT)''')
-#         self.cur.execute('''INSERT INTO gameprogress VALUES 
-#                 (self.player1[Score], self.player2["Score"])''')
-#         self.con.commit()
+    def save_winners (self, board):
+        winner = board.current_player["Player Number"]
+        insert = "INSERT INTO gameprogress VALUES (?, ?, ?)"
+        data = (board.Players.player1['Turns Taken'], board.Players.player2['Turns Taken'], winner)
+        self.cur.execute(insert, data)
+        self.con.commit()
 
-# calling functions
-#data = GameSave()
+    def query_it(self):
+        player1_win_count = self.cur.execute("SELECT Player_1_Score, Winner FROM gameprogress WHERE Winner=1")
+        player1_win_count = len([row for row in player1_win_count])
 
-# starts the game
+        player2_win_count = self.cur.execute("SELECT Player_2_Score, Winner FROM gameprogress WHERE Winner=2")
+        player2_win_count = len([row for row in player2_win_count])
+
+        return player1_win_count, player2_win_count
+
+#initalizing game and data save
+data = GameSave()
 game = Game()
 
 root.mainloop()
