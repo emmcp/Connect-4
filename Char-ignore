@@ -90,6 +90,17 @@ class Board: # game logic, game progress
             self.current_player = self.Players.player2
         else:
             self.current_player = self.Players.player1
+
+    def clear_board(self):
+        self.pieces_in_rows = [0] * self.columns
+        self.board_game = [[0 for _ in range(self.columns)] for _ in range(self.rows)]
+        self.last_played = None
+        self.game_over = False
+
+    def restart_game(self):
+        self.clear_board()
+        self.Players.reset_players()
+        self.current_player = self.Players.player1
     
 # AK
 class GUI: # interface elements
@@ -157,15 +168,6 @@ class GameInstructions:
     def display_instructions(self):
         messagebox.showinfo("Connect 4 Instructions", "\n".join(self.instructions))
 
-# We need a function to clear the board 
-    def clear_board(self):
-        self.board_game = [[0 for i in range(self.columns)] for j in range(self.rows)]
-        self.pieces_in_rows = [0] * self.columns
-        
-# We need a function to restart the game 
-    def restart_game(self):
-        self.clear_board()
-        self.current_player = self.Players.player1
     
 
 
