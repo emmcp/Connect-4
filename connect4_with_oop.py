@@ -132,7 +132,7 @@ class GUI: # interface elements
         self.root.configure(bg='blue')
         self.board_canvas = Canvas(root, width=700, height=600, bg ='blue')
         self.board_canvas.grid(row=3, column=1, columnspan=7)
-        self.circles = [[self.board_canvas.create_oval(j * 100, i * 100, (j +1) * 100, (i + 1) * 100, fill='white') for j in range(7)] for i in range(6)]
+        self.circles = [[self.board_canvas.create_oval(j * 100, i * 100, (j +1) * 100, (i + 1) * 100, fill='white', outline='black') for j in range(7)] for i in range(6)]
 
     def score_tracker(self):
         player1wins, player2wins = data.query_it()
