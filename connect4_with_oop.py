@@ -104,6 +104,7 @@ class GUI: # interface elements
     def clicked(self, c): # increment pieces in column, visually add piece
         self.board.play_piece(c)
         self.update_board()
+        self.root.update_idletasks()
         if self.board.check_win():
             data.save_winners(self.board)
             self.GameOverPopupWindow.gameover_popup(self.board.current_player["Player Number"])
