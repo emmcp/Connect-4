@@ -1,5 +1,4 @@
 from tkinter import *
-from tkinter import font
 from tkinter import messagebox
 import random
 import sqlite3
@@ -39,6 +38,8 @@ class Board: # game logic, game progress
             self.board_game[self.pieces_in_rows[c]][c] = self.current_player["Player Number"]
             self.last_played = (self.pieces_in_rows[c], c) # allows to look for surrounding area to see if there's a win
             self.pieces_in_rows[c] += 1 # adds one to piece
+            self.current_player["Turns Taken"] +=1
+            self.current_player["Pieces"] -= 1
         else:
             messagebox.showinfo("Error: Column is full", "Pick another column.")
 
@@ -82,8 +83,6 @@ class Board: # game logic, game progress
             pass
 
     def players_swap(self):
-        self.current_player["Turns Taken"] +=1
-        self.current_player["Pieces"] -= 1
         if self.current_player == self.Players.player1:
             self.current_player = self.Players.player2
         else:
@@ -113,19 +112,19 @@ class GUI: # interface elements
 
     def button_initalizing(self): # making the buttons
         # lambda allows one to be added to each corresponding column of self.pieces_in_rows
-        self.buttonA = Button(root, text="Column A", command = lambda: self.clicked(0), bg = "blue", borderwidth = 0)
+        self.buttonA = Button(root, text="Column 1", command = lambda: self.clicked(0), bg = "blue", borderwidth = 0)
         self.buttonA.grid(row=2, column=1)
-        self.buttonB = Button(root, text="Column B", command = lambda: self.clicked(1), bg = "blue", borderwidth = 0)
+        self.buttonB = Button(root, text="Column 2", command = lambda: self.clicked(1), bg = "blue", borderwidth = 0)
         self.buttonB.grid(row=2, column=2)
-        self.buttonC = Button(root, text="Column C", command = lambda: self.clicked(2), bg = "blue", borderwidth = 0)
+        self.buttonC = Button(root, text="Column 3", command = lambda: self.clicked(2), bg = "blue", borderwidth = 0)
         self.buttonC.grid(row=2, column=3)
-        self.buttonD = Button(root, text="Column D", command = lambda: self.clicked(3), bg = "blue", borderwidth = 0)
+        self.buttonD = Button(root, text="Column 4", command = lambda: self.clicked(3), bg = "blue", borderwidth = 0)
         self.buttonD.grid(row=2, column=4)
-        self.buttonE = Button(root, text="Column E", command = lambda: self.clicked(4), bg = "blue", borderwidth = 0)
+        self.buttonE = Button(root, text="Column 5", command = lambda: self.clicked(4), bg = "blue", borderwidth = 0)
         self.buttonE.grid(row=2, column=5)
-        self.buttonF = Button(root, text="Column F", command = lambda: self.clicked(5), bg = "blue", borderwidth = 0)
+        self.buttonF = Button(root, text="Column 6", command = lambda: self.clicked(5), bg = "blue", borderwidth = 0)
         self.buttonF.grid(row=2, column=6)
-        self.buttonG = Button(root, text="Column G", command = lambda: self.clicked(6), bg = "blue", borderwidth = 0)
+        self.buttonG = Button(root, text="Column 7", command = lambda: self.clicked(6), bg = "blue", borderwidth = 0)
         self.buttonG.grid(row=2, column=7)
     
     def board_initializer(self): # needs rest of parts
@@ -133,11 +132,11 @@ class GUI: # interface elements
         self.board_canvas = Canvas(root, width=700, height=600, bg ='blue')
         self.board_canvas.grid(row=3, column=1, columnspan=7)
         self.circles = [[self.board_canvas.create_oval(j * 100, i * 100, (j +1) * 100, (i + 1) * 100, fill='white') for j in range(7)] for i in range(6)]
+    
     def score_tracker(self):
         player1wins, player2wins = data.query_it()
-        best_win = data.win_count()
-        print(player1wins, player2wins)
-
+        if player1wins > 0 or player2wins >0:
+            best_score = data.win_count()
         self.scores = Label(root, text="Player Stats", bg= "blue", font=("Arial", 13, "bold"))
         self.scores.grid(row=4, column=1, columnspan=4)
 
@@ -154,7 +153,7 @@ class GUI: # interface elements
             self.no_top_score = Label(root, text="No high score yet", bg="blue",font=("Arial", 13))
             self.no_top_score.grid(row=5, column=5, columnspan=3)
         else:
-            self.topscore = Label(root, text=f"Player {self.board.current_player["Player Number"]} won in {best_win} moves", bg="blue", font=("Arial", 13))
+            self.topscore = Label(root, text=f"Player {self.board.current_player["Player Number"]} won in {best_score} moves", bg="blue", font=("Arial", 13))
             self.topscore.grid(row=5, column=5, columnspan=3)
 
     def update_board(self):
@@ -215,6 +214,7 @@ class Game:
     # officially exits game 
     def exit_game(self):
         root.destroy()
+        data.reset_game_stats()
         
 # Emma
 class GameSave:
@@ -246,21 +246,24 @@ class GameSave:
         return player1_win_count, player2_win_count
     
     def win_count(self):
-        player1_win_count, player2_win_count = self.query_it()
-        counter = 0
-        if counter < 1:
-            if player1_win_count > player2_win_count:
-                best_score = player1_win_count
-                counter += 1
-            else:
-                best_score = player2_win_count
-                counter += 1
+        try: # defining, if first game, sets to 0 so no errors.
+            player1highscore = self.cur.execute("SELECT Player_1_Score FROM gameprogress WHERE Winner=1")
+            player1min = min([row for row in player1highscore])
+            player1min = player1min[0]
+        except:
+            player1min=0
+        try:
+            player2highscore = self.cur.execute("SELECT Player_2_Score FROM gameprogress WHERE Winner=2")
+            player2min = min([row for row in player2highscore])
+            player2min = player2min[0]
+        except:
+            player2min=0
+
+        if player1min < player2min:
+            best_score = player1min
         else:
-            if best_score > player1_win_count:
-                best_score = player1_win_count
-            elif best_score > player2_win_count:
-                best_score = player2_win_count
-        
+            best_score = player2min
+
         return best_score
 
     def reset_game_stats(self):
