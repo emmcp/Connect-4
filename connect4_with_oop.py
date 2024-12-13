@@ -87,6 +87,7 @@ class GUI: # interface elements
 # Color correspondence for turns (can probably use modulus truth, if the turn is even, then whatever color goes first)
 
     def __init__(self, game):
+        self.root = root
         self.board_initializer()
         self.button_initalizing() # call functions here so easier to call at end
         self.board = Board() # initialize previous class
@@ -96,6 +97,7 @@ class GUI: # interface elements
     def clicked(self, c): # increment pieces in column, visually add piece
         self.board.play_piece(c)
         self.update_board()
+        root.update()
         if self.board.check_win():
             data.save_winners(self.board)
             self.GameOverPopupWindow.gameover_popup(self.board.current_player["Player Number"])
