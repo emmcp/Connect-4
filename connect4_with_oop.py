@@ -44,43 +44,36 @@ class Board: # game logic, game progress
             messagebox.showinfo("Error: Column is full", "Pick another column.")
 
     def check_win(self):
-        try: # rows
-            row, column = self.last_played # takes first element to equal row, second to equal column
-            for c in range(-3, 1):
+        row, column = self.last_played # takes first element to equal row, second to equal column
+        for c in range(-3, 1): # checks horizontal
+            try: # rows
                 play = [self.board_game[row][column + c + t] for t in range(0, 4)]
                 if all(play[t] == play[0] for t in range(0,4)): # returns True if all are player 1 or player 2
                     return True
-        except:
-            pass
-
-        try: # columns
-            row, column = self.last_played # takes first element to equal row, second to equal column
-
-            for c in range(-3, 1):
+            except:
+                pass
+            try: # columns                
                 play = [self.board_game[row + c + t][column] for t in range(0, 4)]
                 if all(play[t] == play[0] for t in range(0,4)): # returns True if all are player 1 or player 2
                     return True
-        except:
-            pass
-        
-        try: #diagonals bottom left to top right
-            row, column = self.last_played # takes first element to equal row, second to equal column
+            except:
+                pass
 
-            for c in range(-3, 1): # checks horizontal
+            try: #diagonals bottom left to top right
+                row, column = self.last_played # takes first element to equal row, second to equal column
                 play = [self.board_game[row + c + t][column + c + t] for t in range(0, 4)]
                 if all(play[t] == play[0] for t in range(0,4)): # returns True if all are player 1 or player 2
                     return True
-        except:
-            pass
+            except:
+                pass
 
-        try: #diagonals bottom right to top left
-            row, column = self.last_played # takes first element to equal row, second to equal column
-            for c in range(-3, 1): # checks horizontal
+            try: #diagonals bottom right to top left
+                row, column = self.last_played # takes first element to equal row, second to equal column
                 play = [self.board_game[row + c + t][column - c - t] for t in range(0, 4)]
                 if all(play[t] == play[0] for t in range(0,4)): # returns True if all are player 1 or player 2
                     return True
-        except:
-            pass
+            except:
+                pass
 
     def players_swap(self):
         if self.current_player == self.Players.player1:
@@ -94,7 +87,6 @@ class GUI: # interface elements
 # Color correspondence for turns (can probably use modulus truth, if the turn is even, then whatever color goes first)
 
     def __init__(self, game):
-        self.root = root
         self.board_initializer()
         self.button_initalizing() # call functions here so easier to call at end
         self.board = Board() # initialize previous class
@@ -128,7 +120,7 @@ class GUI: # interface elements
         self.buttonG.grid(row=2, column=7)
     
     def board_initializer(self): # needs rest of parts
-        self.root.configure(bg='blue')
+        root.configure(bg='blue')
         self.board_canvas = Canvas(root, width=700, height=600, bg ='blue')
         self.board_canvas.grid(row=3, column=1, columnspan=7)
         self.circles = [[self.board_canvas.create_oval(j * 100, i * 100, (j +1) * 100, (i + 1) * 100, fill='white') for j in range(7)] for i in range(6)]
@@ -258,11 +250,14 @@ class GameSave:
             player2min = player2min[0]
         except:
             player2min=0
-
-        if player1min < player2min:
-            best_score = player1min
+        
+        if player1min > 0 and player2min> 0:
+            if player1min < player2min:
+                best_score = player1min
+            else:
+                best_score = player2min
         else:
-            best_score = player2min
+            best_score = max(player1min, player2min)
 
         return best_score
 
